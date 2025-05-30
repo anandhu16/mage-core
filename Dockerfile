@@ -2,7 +2,19 @@
 FROM node:20-slim
 
 # Create app directory
-WORKDIR /src
+WORKDIR /app
+
+RUN apk update && \
+    apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    nodejs \
+    yarn
 
 # Copy package files
 COPY package*.json ./
