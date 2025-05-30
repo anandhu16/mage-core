@@ -2,7 +2,7 @@
 FROM node:20-slim
 
 # Create app directory
-WORKDIR /app
+WORKDIR /src
 
 # Copy package files
 COPY package*.json ./
