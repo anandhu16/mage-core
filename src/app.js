@@ -9,6 +9,7 @@ import routes from './routes/index.js';
 import { initializeDatabase } from './config/database.js';
 import configurePassport from './config/passport.js';
 import session from 'express-session';
+import pgSession from 'connect-pg-simple';
 
 
 const app = express();
@@ -26,15 +27,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 await initializeDatabase();
+
 app.use(session({
-  secret: 'your_secret_key', // Replace with your secret key
-  resave: false, saveUninitialized: false, // Don't save sessions until something is stored
-  cookie: {
-    secure: process.env.NODE_ENV === "production",
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,
-  },
+  store: new (pgSession(session))({
+    conString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+  }),
+  secret: process.env.SESSION_SECRET || 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false } // set true if behind HTTPS proxy
 }));
+
 
 
 app.use(passport.initialize());

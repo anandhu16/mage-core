@@ -81,7 +81,9 @@ export const initializeDatabase = async () => {
         console.log('Database connection has been established successfully.');
 
         // Sync all models with the database
-        await sequelize.sync({ force: true });
+        /* The line `// await sequelize.sync({ force: true });` is a comment in the code. It is
+        currently commented out, which means it is not being executed. */
+        // await sequelize.sync({ force: true });
         console.log('All models were synchronized successfully.');
 
         return models;
