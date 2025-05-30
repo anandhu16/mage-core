@@ -42,6 +42,10 @@ app.use(passport.session());
 
 configurePassport();
 
+app.get('/', (req, res) => {
+  res.send('🟢 Server is running.');
+});
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 app.use('/api', routes);
 
