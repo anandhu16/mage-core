@@ -53,13 +53,14 @@ export class ProjectService {
                 Logger.error(`Project not found with id: ${projectId}`);
                 throw new Error('Project not found');
             }
-            Logger.info(`Project tasks: ${JSON.stringify(project.tasks)}`);
+            Logger.info(`Project tasks: ${JSON.stringify(project.taskIds)}`);
             let allTasks = [];
             for (const taskId of project.taskIds) {
                 Logger.info(`Task: ${JSON.stringify(taskId)}`);
                 const taskData = await Task.findByPk(taskId);
                 allTasks.push(taskData);
             }
+            console.log(allTasks);
             return allTasks;
         } catch (error) {
             Logger.error(`Error fetching project tasks: ${error.message}`);

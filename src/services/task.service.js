@@ -1,6 +1,7 @@
 import Project from '../models/project.model.js';
 import Task from '../models/task.model.js';
 import Logger from '../utils/logger.js';
+import User from '../models/user.model.js';
 
 export class TaskService {
     constructor() {
@@ -9,12 +10,24 @@ export class TaskService {
 
     createTask = async (taskData) => {
         try {
+            // Check if createdBy exists in the related table
+            const userExists = await User.findByPk(taskData.createdBy);
+            if (!userExists) {
+                Logger.error(`User not found with id: ${taskData.createdBy}`);
+                throw new Error('User not found');
+            }
+
             Logger.info(`Creating task with data: ${JSON.stringify(taskData)}`);
             const task = await Task.create(taskData);
 
             const project = await Project.findByPk(taskData.projectId);
-            project.taskIds.push(task.id);
-            await project.save();
+            if (!project) {
+                Logger.error(`Project not found with id: ${taskData.projectId}`);
+                throw new Error('Project not found');
+            }
+
+            await project.update({ taskIds: [...project.taskIds, task.id] });
+            console.log(` project: ${JSON.stringify(project)}`);
             Logger.info(`Task created: ${JSON.stringify(task)}`);
             return task;
         } catch (error) {

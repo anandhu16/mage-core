@@ -19,10 +19,12 @@ class Project extends Model {
             memberIds: {
                 type: DataTypes.ARRAY(DataTypes.UUID),
                 defaultValue: [],
+                references: null
             },
             taskIds: {
                 type: DataTypes.ARRAY(DataTypes.UUID),
                 defaultValue: [],
+                references: null
             },
             createdAt: {
                 type: DataTypes.DATE,
@@ -38,6 +40,7 @@ class Project extends Model {
             sequelize,
             modelName: 'Project',
             tableName: 'project',
+            foreignKeyChecks: false
         });
     }
 }
